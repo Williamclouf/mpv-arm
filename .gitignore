@@ -1,1 +1,70 @@
+# macOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build directories and artifacts
+build/
+dist/
+*.app/
+*.dSYM/
+
+# Meson build files
+builddir/
+subprojects/packagecache/
+subprojects/*/
+!subprojects/*.wrap
+
+# Compiled binaries
+*.o
+*.so
+*.dylib
+*.a
+*.la
+*.exe
+mpv
+mpv-*
+
+# Log files
+*.log
+meson-logs/
+
+# IDE and editor files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/.ropeproject
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Dependencies and package managers
+node_modules/
+*.tgz
+*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Configuration files that might contain sensitive data
+config.local
+*.secret
+.env

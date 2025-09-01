@@ -174,9 +174,20 @@ If you encounter issues:
 
 ## 📄 License
 
-This build script and documentation are licensed under the [MIT License](LICENSE).
+This repository's documentation and modifications are licensed under the [MIT License](LICENSE).
 
-**Note:** MPV itself is licensed under GPLv2+. This license only applies to the build scripts and documentation in this repository, not to the MPV software that gets built.
+**Important Note:** 
+- The build script may contain code from other sources
+- This license applies to documentation, guides, and original contributions
+- Please refer to original sources for script attribution
+- MPV itself is licensed under GPLv2+
+
+## 🙏 Credits
+
+- **Original build script** by [dbrookman](https://gist.github.com/dbrookman) - [Source Gist](https://gist.github.com/dbrookman/74b8bcfb37a23452f7137b83bca9580f)
+- **MPV Project** - The amazing media player we're building
+- **MoltenVK** - Vulkan on Metal implementation
+- **Homebrew** - Package management for macOS
 
 ---
 

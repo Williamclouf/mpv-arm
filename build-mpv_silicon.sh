@@ -2,6 +2,9 @@
 
 # Builds mpv & mpv.app on Apple silicon Macs.
 # Run this script from the root directory of the mpv repo.
+#
+# Original script by dbrookman: https://gist.github.com/dbrookman/74b8bcfb37a23452f7137b83bca9580f
+# Modified and maintained by hongmd for this repository
 
 # if anything fails, gtfo
 set -ex

@@ -19,3 +19,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Attribution
+
+This repository contains code from multiple sources:
+
+### Build Script
+- Original script by **dbrookman**: https://gist.github.com/dbrookman/74b8bcfb37a23452f7137b83bca9580f
+- The original script was shared publicly without explicit license
+- Modified and enhanced for this repository
+
+### Documentation & Organization
+- README, guides, and repository structure are original work
+- Licensed under MIT License as stated above
+
+### MPV Software
+- MPV itself is licensed under GPLv2+
+- This license does not apply to the MPV software that gets built

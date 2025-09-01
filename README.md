@@ -7,6 +7,43 @@ A comprehensive guide to build **mpv** media player from source on Apple Silicon
 [![Vulkan](https://img.shields.io/badge/Vulkan-Supported-green?logo=vulkan)](https://www.vulkan.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Quick Start Options
+
+**Don't want to build from source?** Here are your options:
+
+### Option 1: 📦 Prebuilt Binaries (Recommended for most users)
+
+- **🔥 Official MPV Nightly Builds**: [Download here](https://nightly.link/mpv-player/mpv/workflows/build/master) - Official ARM64 builds
+- **🛠️ m154k1's Enhanced Builds**: [mpv-build-macOS](https://github.com/m154k1/mpv-build-macOS) - Comprehensive builds with extra features
+  - Direct download: [mpv-macos-15-arm64.zip](https://nightly.link/m154k1/mpv-build-macOS/workflows/build/master/mpv-macos-15-arm64.zip)
+  - Includes advanced optimizations and additional codecs
+
+### Option 2: 🔨 Build from Source (This Guide)
+
+**Choose this option if you want to:**
+- ✅ Customize build options and dependencies
+- ✅ Latest bleeding-edge features from git
+- ✅ Learn the build process
+- ✅ Optimize for your specific Mac model
+
+### 📊 Comparison Table
+
+| Feature | Official Nightly | m154k1 Builds | This Guide |
+|---------|------------------|---------------|------------|
+| **Ease of Use** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Download Size** | ~50MB | ~80MB | N/A (Build locally) |
+| **Build Time** | Instant | Instant | 20-30 minutes |
+| **Customization** | ❌ | ❌ | ✅ Full control |
+| **Latest Features** | ✅ Daily builds | ✅ Regular updates | ✅ Git HEAD |
+| **Extra Codecs** | ✅ Standard | ✅ Enhanced | ✅ Configurable |
+| **Learning Value** | ❌ | ❌ | ✅ Educational |
+
+**💡 Recommendation:** 
+- **Beginners**: Use Official Nightly or m154k1 builds
+- **Power Users**: Follow this build guide for maximum control
+
+---
+
 ## 📋 Prerequisites
 
 Before building mpv, ensure you have the following installed:
@@ -188,6 +225,12 @@ This repository's documentation and modifications are licensed under the [MIT Li
 - **MPV Project** - The amazing media player we're building
 - **MoltenVK** - Vulkan on Metal implementation
 - **Homebrew** - Package management for macOS
+
+### 🔗 Alternative Build Solutions
+
+- **[m154k1/mpv-build-macOS](https://github.com/m154k1/mpv-build-macOS)** - Comprehensive build scripts with prebuilt binaries
+- **[MPV Official Builds](https://mpv.io/installation/)** - Official nightly builds for Apple Silicon
+- **[pxia/mpv-macos-build](https://github.com/pxia/mpv-macos-build)** - Another excellent build solution
 
 ---
 

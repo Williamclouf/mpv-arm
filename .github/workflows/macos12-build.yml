@@ -1,0 +1,130 @@
+name: Build for macOS 12
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  MACOSX_DEPLOYMENT_TARGET: "12.0"
+  SWIFTFLAGS: "-target arm64-apple-macosx12.0"
+  CXXFLAGS: "-mmacosx-version-min=12.0"
+  LDFLAGS: "-mmacosx-version-min=12.0"
+
+jobs:
+  build-macos-arm64:
+    runs-on: macos-15
+    strategy:
+      matrix:
+        arch: [arm64]
+
+    steps:
+      - name: Checkout mpv source
+        uses: actions/checkout@v4
+        with:
+          repository: mpv-player/mpv
+          submodules: recursive
+
+      - name: Test
+        run: |
+          ls /usr/lib/swift
+          echo '========='
+          echo 'sdk path' $(xcrun --sdk macosx --show-sdk-platform-path)
+          echo 'ls /Applications/Xcode_16.4.app/Contents/Developer'
+          ls /Applications/Xcode_16.4.app/Contents/Developer
+          echo '========='
+          echo 'find /Applications/Xcode_16.4.app -name "libswiftCore.dylib"'
+          find /Applications/Xcode_16.4.app -name "libswiftCore.dylib"
+          echo '========='
+          echo "ls -l /Applications/Xcode.app/Contents/Developer"
+          ls -l /Applications/Xcode.app/Contents/Developer
+          echo 'find /Applications/Xcode.app/Contents -name "libswiftCore.dylib"'
+          find /Applications/Xcode.app/Contents -name "libswiftCore.dylib" | grep "macosx"
+          echo '========='
+          file /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/macosx/libswiftCore.dylib
+
+      - name: Install Homebrew dependencies
+        run: |
+          brew update
+          brew install --build-bottle molten-vk dylibbundler meson libplacebo
+          brew install --build-bottle --only-dependencies mpv
+          # 设置 pkg-config 路径
+          echo "/opt/homebrew/lib/pkgconfig" >> $GITHUB_PATH
+          echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+
+      - name: Configure build for macOS 12 compatibility
+        run: |
+          mkdir -p build
+          meson setup build \
+            --buildtype=release \
+            -Dprefix=/tmp/mpv-dist \
+            -Dc_args="${CXXFLAGS}" \
+            -Dcpp_args="${CXXFLAGS}" \
+            -Dobjc_args="${CXXFLAGS}" \
+            -Dobjc_link_args="${CXXFLAGS}" \
+            -Dswift-flags="${SWIFTFLAGS}" \
+            -Dbuild-date=false \
+            -Dvapoursynth=disabled \
+            -Dvulkan=enabled \
+            -Ddrm=disabled \
+            -Dlua=enabled \
+            -Djavascript=enabled \
+            -Dcplayer=true \
+            -Dlibmpv=false
+
+      - name: Debug Meson Configuration
+        run: |
+          meson configure build
+
+      - name: Compile mpv
+        working-directory: ./build
+        run: |
+          pwd
+          meson compile
+          ./mpv --version
+
+      - name: Bundle macOS app and static linking
+        run: |
+          ./TOOLS/osxbundle.py --skip-deps build/mpv
+
+          # dylibbundler --bundle-deps --dest-dir build/mpv.app/Contents/MacOS/lib/ --install-path @executable_path/lib/ --fix-file build/mpv.app/Contents/MacOS/mpv
+
+          APP_PATH="build/mpv.app"
+          BIN_PATH="$APP_PATH/Contents/MacOS/mpv"
+          FW_PATH="$APP_PATH/Contents/Frameworks"
+          SWIFT_LIB_SRC="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/macosx"
+
+          mkdir -p "$FW_PATH"
+
+          # 4. Manually copy the Swift Core library (and any other Swift deps if needed)
+          cp "$SWIFT_LIB_SRC/libswiftCore.dylib" "$FW_PATH/"
+          chmod 755 "$FW_PATH/libswiftCore.dylib"
+
+          # 6. Ensure the binary has an @rpath pointing to its own Frameworks folder
+          # We use -add_rpath but wrap in || true because it might already exist
+
+          dylibbundler -od -b -x "$BIN_PATH" -d "$FW_PATH" -p "@rpath/"
+
+          # 5. Force the binary to use @rpath instead of the absolute /usr/lib/swift path
+          # This prevents the app from trying to use the 'broken' macOS 12 system lib
+          install_name_tool -add_rpath "@executable_path/../Frameworks" "$BIN_PATH" || true
+          install_name_tool -change "/usr/lib/swift/libswiftCore.dylib" "@rpath/libswiftCore.dylib" "$BIN_PATH"
+
+          echo "Ad-hoc signing libraries..."
+          find "$FW_PATH" -type f \( -name "*.dylib" -or -name "*.so" \) -exec codesign --force --deep --sign - {} \;
+          codesign --force --deep --sign - "$BIN_PATH"
+          codesign -dv "$BIN_PATH"
+
+      - name: Check output files
+        working-directory: ./build
+        run: |
+          ls -lah
+          ditto -c -k --keepParent mpv.app mpv-macos-12-arm64.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-macos-12-${{ matrix.arch }}
+          path: build/mpv-macos-12-arm64.zip
+          compression-level: 0
